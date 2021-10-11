@@ -2,6 +2,7 @@ class Node {
   value = null
   direction = null
   parent = null
+  level = 0
   x = 0
   y = 0
   children = []
@@ -11,6 +12,9 @@ class Node {
     this.settings = settings
     this.width = this.settings.width
     this.height = this.settings.height
+    if (parent) {
+      this.level = parent.level + 1
+    }
 
     this.settings.nodes.push(this)
     this.settings.leaves.push(this)
@@ -25,26 +29,29 @@ class Node {
     leftUp.y = this.y
     leftUp.width = Math.floor(this.width / 2)
     leftUp.height = Math.floor(this.height / 2)
+    this.children.push(leftUp)
 
     const rightUp = new Node(this, this.settings)
     rightUp.x = this.x + Math.floor(this.width / 2)
     rightUp.y = this.y
     rightUp.width = Math.ceil(this.width / 2)
     rightUp.height = Math.floor(this.height / 2)
+    this.children.push(rightUp)
 
     const leftDown = new Node(this, this.settings)
     leftDown.x = this.x
     leftDown.y = this.y + Math.floor(this.height / 2)
     leftDown.width = Math.floor(this.width / 2)
     leftDown.height = Math.ceil(this.height / 2)
+    this.children.push(leftDown)
 
     const rightDown = new Node(this, this.settings)
     rightDown.x = this.x + Math.floor(this.width / 2)
     rightDown.y = this.y + Math.floor(this.height / 2)
     rightDown.width = Math.ceil(this.width / 2)
     rightDown.height = Math.ceil(this.height / 2)
+    this.children.push(rightDown)
 
-    this.children.push(leftUp, rightUp, leftDown, rightDown)
     const index = this.settings.leaves.indexOf(this)
     this.settings.leaves.splice(index, 1)
   }

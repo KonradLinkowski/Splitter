@@ -1,11 +1,12 @@
 import { Tree } from './tree.js'
 import { getAverageColor } from './image.js'
-import { randomInt } from './math.js'
 
-export function createTree(imageData, splits) {
+export function createTree(imageData, { splits, random }) {
   const tree = new Tree(imageData.width, imageData.height)
   for (let i = 0; i < splits; i += 1) {
-    const node = tree.leaves[randomInt(0, tree.leaves.length)]
+    tree.leaves.sort((a, b) => a.level - b.level)
+    const index = Math.floor(Math.pow(Math.random(), random) * tree.leaves.length)
+    const node = tree.leaves[index]
     node.split()
   }
   for (const node of tree.leaves) {

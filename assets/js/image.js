@@ -20,18 +20,30 @@ export function getAverageColor(imageData, x, y, width, height) {
   return avg
 }
 
-export async function drawTree(canvas, imageData, tree) {
+export async function drawTree(canvas, imageData, tree, { overflow, borderWidth }) {
   const ctx = canvas.getContext('2d')
   ctx.canvas.width = imageData.width
   ctx.canvas.height = imageData.height
+  tree.leaves.sort(() => Math.random() - 0.5)
   for (const node of tree.leaves) {
-    ctx.fillStyle = `rgb(${node.value.r}, ${node.value.g}, ${node.value.b})`
-    ctx.fillRect(
-      node.x,
-      node.y,
-      node.width,
-      node.height
+    const factor = node.width * overflow
+
+    ctx.beginPath()
+    ctx.rect(
+      node.x - factor,
+      node.y - factor,
+      node.width + factor * 2,
+      node.height + factor * 2
     )
+    ctx.fillStyle = `rgb(${node.value.r}, ${node.value.g}, ${node.value.b})`
+    ctx.closePath()
+    ctx.fill()
+
+    if (borderWidth) {
+      ctx.strokeStyle = 'white'
+      ctx.lineWidth = borderWidth
+      ctx.stroke()
+    }
   }
   return await createImageBitmap(canvas)
 }

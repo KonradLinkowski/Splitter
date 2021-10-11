@@ -1,22 +1,26 @@
 import { loadImage } from './image.js'
 import { Scheduler } from './scheduler.js'
+import { CONTROL_TYPE, createSettings } from './settings.js'
 
 const $original = document.querySelector('#original')
 const $generated = document.querySelector('#generated')
-const $slider = document.querySelector('#slider')
-const $sliderInput = document.querySelector('#slider-input')
 
 const scheduler = new Scheduler(onImageReady)
 
-$slider.addEventListener('input', () => {
-  $sliderInput.value = +$slider.value
-  scheduler.scheduleImageGeneration($original, +$slider.value)
-})
+const settings = createSettings(document.body, [
+  { name: 'splits', type: CONTROL_TYPE.Range, label: 'Splits', value: 10, options: { min: 0, max: 1000, step: 1 } },
+  { name: 'overflow', type: CONTROL_TYPE.Range, label: 'Overflow', value: 0, options: { min: -1, max: 1, step: 0.01 } },
+  { name: 'borderWidth', type: CONTROL_TYPE.Range, label: 'Border width', value: 0, options: { min: 0, max: 5, step: 1 } },
+  { name: 'random', type: CONTROL_TYPE.Range, label: 'Random weight', value: 1, options: { min: 1, max: 5, step: 0.1 } }
+])
 
-$sliderInput.addEventListener('input', () => {
-  $slider.value = +$sliderInput.value
-  scheduler.scheduleImageGeneration($original, +$sliderInput.value)
-})
+settings.on('input', onUpdate)
+
+function onUpdate({ values }) {
+  scheduler.scheduleImageGeneration($original, {
+    ...values
+  })
+}
 
 main()
 
@@ -26,7 +30,9 @@ async function main() {
   $original.width = image.naturalWidth
   $original.height = image.naturalHeight
   ctx.drawImage(image, 0, 0)
-  scheduler.scheduleImageGeneration($original, 10)
+  scheduler.scheduleImageGeneration($original, {
+    ...settings.getValues()
+  })
 }
 
 function onImageReady(bitmap) {

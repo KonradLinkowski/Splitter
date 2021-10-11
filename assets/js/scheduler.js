@@ -10,16 +10,19 @@ export class Scheduler {
       this.ready = true
       this.run()
     })
+
+    this.worker.addEventListener('error', console.error)
+    this.worker.addEventListener('messageerror', console.error)
   }
 
-  scheduleImageGeneration(canvas, splits) {
+  scheduleImageGeneration(canvas, options) {
     this.next = () => {
       const imageData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height)
       this.worker.postMessage({
         width: imageData.width,
         height: imageData.height,
         buffer: imageData.data.buffer,
-        splits
+        options
       }, [imageData.data.buffer])
     }
     this.run()
