@@ -1,0 +1,10 @@
+.images {
+  display: flex;
+  justify-content: center;
+}
+
+.splits {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
