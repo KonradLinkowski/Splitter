@@ -11,7 +11,7 @@ const settings = createSettings(document.body, [
   { name: 'splits', type: CONTROL_TYPE.Range, label: 'Splits', value: 10, options: { min: 0, max: 1000, step: 1 } },
   { name: 'overflow', type: CONTROL_TYPE.Range, label: 'Overflow', value: 0, options: { min: -1, max: 1, step: 0.01 } },
   { name: 'borderWidth', type: CONTROL_TYPE.Range, label: 'Border width', value: 0, options: { min: 0, max: 5, step: 1 } },
-  { name: 'random', type: CONTROL_TYPE.Range, label: 'Random weight', value: 1, options: { min: 1, max: 5, step: 0.1 } }
+  { name: 'random', type: CONTROL_TYPE.Range, label: 'Random weight', value: 2, options: { min: 1, max: 5, step: 0.1 } }
 ])
 
 settings.on('input', onUpdate)

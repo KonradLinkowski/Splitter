@@ -26,14 +26,15 @@ export async function drawTree(canvas, imageData, tree, { overflow, borderWidth 
   ctx.canvas.height = imageData.height
   tree.leaves.sort(() => Math.random() - 0.5)
   for (const node of tree.leaves) {
-    const factor = node.width * overflow
+    const widthFactor = node.width * overflow
+    const heightFactor = node.height * overflow
 
     ctx.beginPath()
     ctx.rect(
-      node.x - factor,
-      node.y - factor,
-      node.width + factor * 2,
-      node.height + factor * 2
+      node.x - widthFactor,
+      node.y - heightFactor,
+      node.width + widthFactor * 2,
+      node.height + heightFactor * 2
     )
     ctx.fillStyle = `rgb(${node.value.r}, ${node.value.g}, ${node.value.b})`
     ctx.closePath()
