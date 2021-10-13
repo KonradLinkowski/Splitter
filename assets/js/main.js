@@ -7,7 +7,7 @@ const $generated = document.querySelector('#generated')
 
 const scheduler = new Scheduler(onImageReady)
 
-const settings = createSettings(document.body, [
+const settings = createSettings(document.querySelector('#settings'), [
   { name: 'splits', type: CONTROL_TYPE.Range, label: 'Splits', value: 10, options: { min: 0, max: 1000, step: 1 } },
   { name: 'overflow', type: CONTROL_TYPE.Range, label: 'Overflow', value: 0, options: { min: -1, max: 1, step: 0.01 } },
   { name: 'borderWidth', type: CONTROL_TYPE.Range, label: 'Border width', value: 0, options: { min: 0, max: 5, step: 1 } },

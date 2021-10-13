@@ -6,8 +6,12 @@
 
 body {
   margin: 0;
-  padding: 2rem;
   font-family: "Lato", sans-serif;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  justify-content: center;
+  min-height: 100vh;
 }
 
 .images {
@@ -27,6 +31,7 @@ body {
   margin-top: 1rem;
   display: flex;
   flex-direction: column;
+  margin-bottom: 3rem;
 }
 
 .settings-range {
@@ -157,4 +162,20 @@ body {
 }
 .dropzone.highlight .icon::after {
   border-color: #f9f9fb #f9f9fb #007bff #007bff;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: auto;
+  padding: 1rem;
+}
+
+.footer .link {
+  color: black;
+}
+
+.footer .link:hover {
+  text-decoration: none;
 }
