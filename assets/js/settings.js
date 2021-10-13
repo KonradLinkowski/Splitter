@@ -1,6 +1,7 @@
 export const CONTROL_TYPE = {
   Range: Symbol('range'),
-  Checkbox: Symbol('checkbox')
+  Checkbox: Symbol('checkbox'),
+  File: Symbol('checkbox')
 }
 
 export function createSettings($parent, controls) {
@@ -51,6 +52,7 @@ export function createSettings($parent, controls) {
 const controls = {
   [CONTROL_TYPE.Range]: (emit, label, value, { min, max, step }) => {
     const $div = document.createElement('div')
+    $div.setAttribute('class', 'settings-range')
     const id = generateId(label)
     const $label = document.createElement('label')
     $label.setAttribute('for', id)
@@ -111,6 +113,69 @@ const controls = {
     return {
       $element: $div
     }
+  },
+  [CONTROL_TYPE.File]: (emit, label, value) => {
+    const id = generateId(label)
+    const $dropzone = document.createElement('div')
+    $dropzone.setAttribute('class', 'dropzone')
+
+    const $label = document.createElement('label')
+    $label.setAttribute('for', id)
+    $label.setAttribute('class', 'label')
+    $dropzone.appendChild($label)
+
+    const $icon = document.createElement('span')
+    $icon.textContent = '+'
+    $icon.setAttribute('class', 'icon')
+    $label.appendChild($icon)
+
+    const $description = document.createElement('p')
+    $description.textContent = label
+    $description.setAttribute('class', 'description')
+    $label.appendChild($description)
+
+    const $input = document.createElement('input')
+    $input.setAttribute('id', id)
+    $input.setAttribute('type', 'file')
+    $input.setAttribute('class', 'input')
+    $input.setAttribute('value', value || null)
+    $input.setAttribute('accept', 'image/x-png,image/jpeg')
+    $dropzone.appendChild($input)
+
+    const resetEvents = ['dragenter', 'dragover', 'dragleave', 'drop']
+    const highlightEvents = ['dragenter', 'dragover']
+    const unhighlightEvents = ['dragleave', 'drop']
+
+    resetEvents.forEach(eventName => {
+      $dropzone.addEventListener(eventName, preventDefaults, false)
+      document.body.addEventListener(eventName, preventDefaults, false)
+    })
+    highlightEvents.forEach(eventName => {
+      $dropzone.addEventListener(eventName, () => $dropzone.classList.add('highlight'), false)
+    })
+    unhighlightEvents.forEach(eventName => {
+      $dropzone.addEventListener(eventName, () => $dropzone.classList.remove('highlight'), false)
+    })
+
+    $dropzone.addEventListener('drop', ({ dataTransfer }) => handleFiles(dataTransfer.files), false)
+    $dropzone.addEventListener('input', ({ target }) => handleFiles(target.files), false)
+
+    
+    function handleFiles(files) {
+      if (files.length === 0) {
+        console.error('No file provided')
+        return
+      }
+      const reader = new FileReader()
+      reader.addEventListener('loadend', () => {
+        emit('input', reader.result)
+      })
+      reader.readAsDataURL(files[0])
+    }
+
+    return {
+      $element: $dropzone
+    }
   }
 }
 
@@ -125,4 +190,9 @@ function createControl({ type, label, value, options }, emit) {
 
 function generateId(label) {
   return `settings-${label.replace(/\s/g, '-').toLowerCase()}`
+}
+
+function preventDefaults(e) {
+  e.preventDefault()
+  e.stopPropagation()
 }
